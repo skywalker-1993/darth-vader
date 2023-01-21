@@ -1,0 +1,79 @@
+version: '3.7'
+
+services:
+  
+#  testng_test:
+#    container_name: testng_test
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    environment:
+#      TEST_ENV: qa
+#      SELENIUM_HUB_LINK: http://selenium-hub:4444/wd/hub
+#    working_dir: /home/test_repo
+#    volumes:
+#      - test_repo:/home/test_repo/
+#      # - chrome_storage:/home/test_repo/browser_storage/chrome
+#      # - firefox_storage:/home/test_repo/browser_storage/firefox
+#      # - edge_storage:/home/test_repo/browser_storage/edge
+#    depends_on:
+#      - selenium-hub
+#      - chrome
+#      - firefox
+#      # - edge
+
+  chrome:
+    image: selenium/node-chrome
+    shm_size: 2gb
+    environment:
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    # volumes:
+    #   - test_repo:/home/seluser/test_repo
+    #   - chrome_storage:/home/seluser
+    depends_on:
+      - selenium-hub
+
+  firefox:
+    image: selenium/node-firefox
+    shm_size: 2gb
+    environment:
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    # volumes:
+      # - test_repo:/home/seluser/test_repo
+      # - firefox_storage:/home/seluser
+    depends_on:
+      - selenium-hub
+
+#  edge:
+#    image: selenium/node-edge
+#    shm_size: 2gb
+#    environment:
+#      - SCREEN_WIDTH=1920
+#      - SCREEN_HEIGHT=1080
+#      - SE_EVENT_BUS_HOST=selenium-hub
+#      - SE_EVENT_BUS_PUBLISH_PORT=4442
+#      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#    volumes:
+#      - test_repo:/home/seluser/test_repo
+#      - edge_storage:/home/seluser
+#    depends_on:
+#      - selenium-hub
+
+  selenium-hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
+
+volumes:
+  test_repo:
+  # chrome_storage:
+  # firefox_storage:
+  # edge_storage:

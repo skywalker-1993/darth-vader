@@ -1,0 +1,184 @@
+package WebPageInteraction;
+
+import static TestSetupTeardown.HelperMethods.parseStringToInt;
+import static TestSetupTeardown.SetupsAndCleanups.IMPLICIT_WAIT;
+
+import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.Reporter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@Slf4j
+public class PageElementsInteraction extends HTMLElementsMapping {
+
+    private static final long SAVE_DURATION_MILISECONDS = 5000;
+    private static final String BROWSER_TEST_DATA = "/home/seluser/test_repo/testData/";
+    private static final Map<String, Integer> PRICE_SORT_TEXT = new HashMap<>(){{
+        put("ascendantPrice", 4);
+        put("descendantPrice", 5);
+    }};
+
+    private final List<Integer> priceList = new ArrayList<>();
+
+    private WebDriver webdriver;
+
+    public PageElementsInteraction(WebDriver webdriver) {
+        this.webdriver = webdriver;
+    }
+
+    private WebDriver getDriver() {
+        return this.webdriver;
+    }
+
+    public void waitUntilTextIsDisplayed(String textToSearch) {
+        boolean isSaveConcluded = false;
+        long initialTime = System.currentTimeMillis();
+        long elapsedTime = 0;
+        while (!isSaveConcluded && elapsedTime <= SAVE_DURATION_MILISECONDS) {
+            if (getDriver().getPageSource().contains(textToSearch)) {
+                isSaveConcluded = true;
+            }
+            elapsedTime = System.currentTimeMillis() - initialTime;
+        }
+    }
+
+    public void removeCookieBanner() {
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("return document.getElementsByTagName('cmm-cookie-banner')[0].remove();");
+    }
+
+    public void acceptAllCookies() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("cmm-cookie-banner"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        shadowRoot.findElement(By.cssSelector("div > div > div.cmm-cookie-banner__content > " +
+            "cmm-buttons-wrapper > div > div > button.wb-button.wb-button--primary.wb-button--small" +
+            ".wb-button--accept-all")).click();
+        //"header > div > nav.owc-header__header-navigation > div > ul > li.owc-header-navigation-topic" +
+        //    ".owc-header-navigation-topic--desktop-nav.owc-header-navigation-topic__model-flyout > button > p"
+    }
+
+    public void clickOnOurCars() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("owc-header"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        shadowRoot.findElement(By.cssSelector("nav.owc-header__header-navigation > div > ul > li" +
+            ".owc-header-navigation-topic" +
+            ".owc-header-navigation-topic--desktop-nav.owc-header-navigation-topic__model-flyout > button > p"))
+            .click();
+
+    }
+
+    public void clickOnCarModel() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("vmos-flyout"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        //4th Elements is Hatchback
+        shadowRoot.findElement(By.cssSelector("#app-vue > div > ul > li:nth-child(3) > ul > li:nth-child(4) > div > p"))
+            .click();
+    }
+
+    public void clickOnHatchbacks() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("vmos-flyout"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        //Class A -> index 1
+        shadowRoot.findElement(By.cssSelector("#app-vue > div > owc-header-flyout > ul > li > ul > li:nth-child(1) > " +
+                "a > p"))
+            .click();
+    }
+
+    public void clickOnBuildYourCar() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("owc-stage"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        shadowRoot.findElement(By.cssSelector("a.owc-stage-cta-buttons__button.wb-button" +
+                ".wb-button--medium.wb-button--theme-dark.wb-button--large.wb-button--secondary" +
+                ".owc-stage-cta-buttons__button--secondary"))
+            .click();
+    }
+
+//    private void scrollIntoView(WebElement element) {
+//        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+//        try {
+//            Thread.sleep(2000);
+//        } catch(InterruptedException ex) {
+//
+//        }
+//    }
+
+    private void scrollUntilClickable(WebElement element) {
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        executor.executeScript("arguments[0].scrollIntoView(true);", element);
+        executor.executeScript("arguments[0].click();", element);
+    }
+
+    public void checkFuelsSelectedCount(WebElement fuelButton) {
+        long initTime = System.currentTimeMillis();
+        boolean isTextUpdate = fuelButton.findElement(By.tagName("wb-counter")).getText().isBlank();
+        while (isTextUpdate || IMPLICIT_WAIT >= System.currentTimeMillis() - initTime) {
+            isTextUpdate = fuelButton.findElement(By.tagName("wb-counter")).getText().isBlank();
+        }
+        Assert.assertEquals(fuelButton.findElement(By.tagName("wb-counter")).getText(), "1");
+    }
+
+    public void selectFuelType() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        WebElement filterMain = shadowRoot.findElement(
+            By.cssSelector("cc-motorization-filters > cc-motorization-filters-form > form > div" +
+                " > div.cc-motorization-filters-form__primary > div.cc-motorization-filters-form__primary-filters" +
+                ".ng-star-inserted > cc-motorization-filters-primary-filters > div > fieldset > " +
+                "wb-multi-select-control"));
+        WebElement filterButton = filterMain.findElement(By.tagName("button"));
+        scrollUntilClickable(filterButton);
+        WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(2) >" +
+            " label > div > wb-icon"));
+        scrollUntilClickable(filterType);
+        //checkFuelsSelectedCount(filterButton);
+        filterButton.click();
+    }
+
+    public List<Integer> getAllPrices() {
+        WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
+        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        WebElement allCarsContainer = shadowRoot.findElement(
+            By.cssSelector("cc-motorization-comparison > div > div"));
+        List<WebElement> allCars = allCarsContainer.findElements(By.xpath("*"));
+        Reporter.log(String.valueOf(allCars.size()));
+        for (WebElement el: allCars) {
+            String price = el.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
+            this.priceList.add(parseStringToInt(price));
+        }
+        Reporter.log(this.priceList.toString());
+        //TODO: Assert message with total amount
+//        "#cc-app-container-main > div.cc-app-container__main-frame.cc-grid-container > div.cc-grid-container" +
+//            ".ng-star-inserted > div > div:nth-child(2) > cc-motorization > cc-motorization-filters > div"
+        return this.priceList;
+    }
+
+   public void selectSort(String sort) {
+       WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
+       SearchContext shadowRoot = shadowHost.getShadowRoot();
+       Select dropdown = new Select(shadowRoot.findElement(By.cssSelector("#motorization-filters-sorting-options")));
+       dropdown.selectByIndex(PRICE_SORT_TEXT.get(sort));
+   }
+
+   //public
+
+   public int getMaximumPrice() {
+        return Collections.max(this.priceList);
+   }
+
+    public int getMinimumPrice() {
+        return Collections.min(this.priceList);
+    }
+
+}
