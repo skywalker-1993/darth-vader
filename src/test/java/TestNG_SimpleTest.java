@@ -22,7 +22,8 @@ public class TestNG_SimpleTest extends SetupsAndCleanups {
         testWebPage.getAllPrices();
         Reporter.log(String.valueOf(testWebPage.getMaximumPrice()));
         Reporter.log(String.valueOf(testWebPage.getMinimumPrice()));
-        testWebPage.selectSort("ascendantPrice");
+        //testWebPage.selectSort("descendantPrice");
+        testWebPage.getSortedPrices();
         HelperMethods.takeScreenshot(webdriver, getBrowserScreenshotsPath());
         //TODO: Check how many filters are set
     }

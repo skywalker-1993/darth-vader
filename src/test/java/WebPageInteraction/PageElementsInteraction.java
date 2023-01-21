@@ -32,6 +32,11 @@ public class PageElementsInteraction extends HTMLElementsMapping {
 
     private final List<Integer> priceList = new ArrayList<>();
 
+    private final Map<String, Integer> uiPriceLimits = new HashMap<>(){{
+        put("MAXIMUM_PRICE", -1);
+        put("MINIMUM_PRICE", -1);
+    }};
+
     private WebDriver webdriver;
 
     public PageElementsInteraction(WebDriver webdriver) {
@@ -171,7 +176,22 @@ public class PageElementsInteraction extends HTMLElementsMapping {
        dropdown.selectByIndex(PRICE_SORT_TEXT.get(sort));
    }
 
-   //public
+   public void getSortedPrices() {
+       WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
+       SearchContext shadowRoot = shadowHost.getShadowRoot();
+       selectSort("descendantPrice");
+       WebElement firstPrice = shadowRoot.findElement(
+           By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
+       String firstPriceText = firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
+       this.uiPriceLimits.put("MAXIMUM_PRICE", parseStringToInt(firstPriceText));
+       selectSort("ascendantPrice");
+       firstPrice = shadowRoot.findElement(
+           By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
+       firstPriceText =
+           firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
+       this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
+       Reporter.log(this.uiPriceLimits.toString());
+   }
 
    public int getMaximumPrice() {
         return Collections.max(this.priceList);
