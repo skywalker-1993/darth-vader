@@ -4,6 +4,9 @@ import static TestSetupTeardown.HelperMethods.getTimestampString;
 import static TestSetupTeardown.HelperMethods.parseStringToInt;
 import static TestSetupTeardown.HelperMethods.sleep;
 import static TestSetupTeardown.HelperMethods.writeToFile;
+import static WebPageInteraction.ElementMapping.CAR_TYPES;
+import static WebPageInteraction.ElementMapping.FUEL_TYPES;
+import static WebPageInteraction.ElementMapping.HATCHBACKS_MODELS;
 
 import TestSetupTeardown.HelperMethods;
 import TestSetupTeardown.SetupsAndCleanups;
@@ -42,11 +45,6 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         put("MINIMUM_PRICE", -1);
     }};
 
-    public void removeCookieBanner() {
-        JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        js.executeScript("return document.getElementsByTagName('cmm-cookie-banner')[0].remove();");
-    }
-
     private SearchContext getShadowRoot(String tagName) {
         WebElement shadowHost = getDriver().findElement(By.tagName(tagName));
         return shadowHost.getShadowRoot();
@@ -65,21 +63,20 @@ public class PageElementsInteraction extends SetupsAndCleanups {
             ".owc-header-navigation-topic" +
             ".owc-header-navigation-topic--desktop-nav.owc-header-navigation-topic__model-flyout > button > p"))
             .click();
-
     }
 
-    public void clickOnCarModel() {
+    public void clickOnCarType(String type) {
         SearchContext shadowRoot = getShadowRoot("vmos-flyout");
         //4th Elements is Hatchback
-        shadowRoot.findElement(By.cssSelector("#app-vue > div > ul > li:nth-child(3) > ul > li:nth-child(4) > div > p"))
+        shadowRoot.findElement(By.cssSelector("#app-vue > div > ul > li:nth-child(3) > ul > li:nth-child(" +
+                CAR_TYPES.get(type) + ") > div > p"))
             .click();
     }
 
-    public void clickOnCarClass() {
+    public void clickOnCarModel(String model) {
         SearchContext shadowRoot = getShadowRoot("vmos-flyout");
-        //Class A -> index 1
-        shadowRoot.findElement(By.cssSelector("#app-vue > div > owc-header-flyout > ul > li > ul > li:nth-child(1) > " +
-                "a > p"))
+        shadowRoot.findElement(By.cssSelector("#app-vue > div > owc-header-flyout > ul > li > ul > li:nth-child(" +
+                HATCHBACKS_MODELS.get(model) + ") > a > p"))
             .click();
     }
 
@@ -107,7 +104,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         Assert.assertEquals(fuelButton.findElement(By.tagName("wb-counter")).getText(), "1");
     }
 
-    public void selectFuelType() {
+    public void selectFuelType(String fuelType) {
         SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
         WebElement filterMain = shadowRoot.findElement(
             By.cssSelector("cc-motorization-filters > cc-motorization-filters-form > form > div" +
@@ -116,8 +113,8 @@ public class PageElementsInteraction extends SetupsAndCleanups {
                 "wb-multi-select-control"));
         WebElement filterButton = filterMain.findElement(By.tagName("button"));
         scrollToAndClick(filterButton);
-        WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(1) >" +
-            " label > div > wb-icon"));
+        WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(" +
+            FUEL_TYPES.get(fuelType) + ") > label > div > wb-icon"));
         scrollToAndClick(filterType);
         checkFuelsSelectedCount(filterButton);
         filterButton.click();

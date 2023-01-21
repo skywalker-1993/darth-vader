@@ -13,10 +13,10 @@ public class TestNG_SimpleTest extends PageElementsInteraction {
         goToSpecifiedWebpage(getTestURL(testURL));
         acceptAllCookies();
         clickOnOurCars();
-        clickOnCarModel();
-        clickOnCarClass();
+        clickOnCarType("Hatchbacks");
+        clickOnCarModel("A-Class");
         clickOnBuildYourCar();
-        selectFuelType();
+        selectFuelType("Diesel");
         getAllPrices();
         getSortedPrices();
         writePricesToFile();
