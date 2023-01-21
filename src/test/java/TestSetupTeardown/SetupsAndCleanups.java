@@ -23,43 +23,16 @@ public class SetupsAndCleanups {
     public static final int IMPLICIT_WAIT = 30;
     private static final String REMOTE_URL_HUB = getSeleniumHubLink();
     public static final String TEST_DATA_PATH = "/home/test_repo/testData/";
-    private String browserDownloadsPath;
     private String browserScreenshotsPath;
     private WebDriver webdriver;
-    private final Map<String, String> testURLsTable = new HashMap<String, String>();
-    //private final Map<String, String> seleniumHubLink = new HashMap<String, String>();
+    private final Map<String, String> testURLsTable = new HashMap<String, String>(){{
+        put("WEBPAGE_QA_URL", "https://www.mercedes-benz.co.uk");
+    }};
     protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
     protected BrowserSelection browserSelection = new BrowserSelection();
-    //protected PageElementsInteraction testWebPage;
-
-    public SetupsAndCleanups(){
-        setTestURLsTable();
-        //setSeleniumHubLink();
-    }
-
-    private void setTestURLsTable() {
-        testURLsTable.put("WEBPAGE_QA_URL", "https://www.mercedes-benz.co.uk");
-    }
-
-//    private void setSeleniumHubLink(){
-//        seleniumHubLink.put("SELENIUM_HUB_LOCAL", "http://localhost:4444/wd/hub");
-//        seleniumHubLink.put("SELENIUM_HUB_DOCKER", "http://selenium-hub:4444/wd/hub");
-//    }
 
     public String getTestURL(String testConfigURL){
         return testURLsTable.get(testConfigURL);
-    }
-
-//    private void setPageElementsInteraction(WebDriver webdriver) {
-//        this.testWebPage = new PageElementsInteraction(webdriver);
-//    }
-
-    private void setBrowserDownloadsPath(String browser){
-        this.browserDownloadsPath = "/home/test_repo/browser_storage/" + browser + "/Downloads/";
-    }
-
-    public String getBrowserDownloadsPath() {
-        return this.browserDownloadsPath;
     }
 
     private void setBrowserScreenshotsPath(String browser) {
@@ -95,7 +68,6 @@ public class SetupsAndCleanups {
     @BeforeTest
     public void initializeBrowserInstance(String browser) throws MalformedURLException {
         setDriver(browser);
-        setBrowserDownloadsPath(browser);
         setBrowserScreenshotsPath(browser);
         this.webdriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT));
     }

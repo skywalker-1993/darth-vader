@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -20,22 +19,7 @@ import java.sql.Timestamp;
 @Slf4j
 public class HelperMethods extends SetupsAndCleanups{
 
-    private static final int WAIT_FOR_FILE = 30;
     private static final int SLEEP_TIME = 500;
-
-    public static void waitForFileToExist(File fullFilePath) throws FileNotFoundException {
-        int timer = 0;
-        try{
-            while (!fullFilePath.exists() && timer <= WAIT_FOR_FILE){
-                Thread.sleep(1000);
-                timer++;
-            }
-            if(!fullFilePath.exists()) throw new FileNotFoundException("File " + fullFilePath + " was NOT found!");
-        } catch (InterruptedException e) {
-            log.error("[ERROR]: Thread wasn't put on hold while waiting for file!", e);
-            Thread.currentThread().interrupt();
-        }
-    }
 
     public static String getTimestampString(){
         Timestamp timestamp = new Timestamp(currentTimeMillis());

@@ -132,8 +132,11 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         }
         Reporter.log(this.priceList.toString());
         //TODO: Assert message with total amount
-//        "#cc-app-container-main > div.cc-app-container__main-frame.cc-grid-container > div.cc-grid-container" +
-//            ".ng-star-inserted > div > div:nth-child(2) > cc-motorization > cc-motorization-filters > div"
+
+        String engineVariants = shadowRoot.findElement(By.cssSelector("cc-motorization-filters > div")).getText();
+        Reporter.log("TIAGO AS ENGINES VARIANTS SAO ESTAS: " + engineVariants);
+
+        //Assert.assertEquals(this.priceList.size(), 2);
         return this.priceList;
     }
 
@@ -173,6 +176,11 @@ public class PageElementsInteraction extends SetupsAndCleanups {
 
     public int getMinimumPrice() {
         return Collections.min(this.priceList);
+    }
+
+    public void checkThatPricesMatchWithOrder() {
+        Assert.assertEquals(this.uiPriceLimits.get("MINIMUM_PRICE") + " "
+            + this.uiPriceLimits.get("MAXIMUM_PRICE"), getMinimumPrice() + " " + getMaximumPrice());
     }
 
 }
