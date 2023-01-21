@@ -40,7 +40,7 @@ public class SetupsAndCleanups {
             //System.getProperty("user.dir")
             this.browserScreenshotsPath = "C:\\BrowserScreenshots\\" + browser + "\\";
         } else {
-            this.browserScreenshotsPath = "/home/test_repo/browser_storage/" + browser + "/screenshots/";
+            this.browserScreenshotsPath = "/home/test_repo/browser_storage/" + browser + "/";
         }
     }
 

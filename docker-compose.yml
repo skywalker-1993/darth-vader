@@ -2,22 +2,22 @@ version: '3.7'
 
 services:
   
-#  testng_test:
-#    container_name: testng_test
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    environment:
-#      TEST_ENV: qa
-#      SELENIUM_HUB_LINK: http://selenium-hub:4444/wd/hub
-#    working_dir: /home/test_repo
-#    volumes:
-#      - test_repo:/home/test_repo/
-#    depends_on:
-#      - selenium-hub
-#      - chrome
-#      # - firefox
-#      - edge
+  testng_test:
+    container_name: testng_test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TEST_ENV: qa
+      SELENIUM_HUB_LINK: http://selenium-hub:4444/wd/hub
+    working_dir: /home/test_repo
+    volumes:
+      - test_repo:/home/test_repo/
+    depends_on:
+      - selenium-hub
+      - chrome
+      # - firefox
+      - edge
 
   chrome:
     image: selenium/node-chrome
