@@ -26,9 +26,9 @@ dependencies {
 
 test {
     useTestNG() {
-        if (project.properties["build_mode"] == "qa") {
+        if (project.properties["test_env"] == "qa") {
             options.suites('src/test/resources/testng_qa.xml')
-        } else if (project.properties["build_mode"] == "uat") {
+        } else if (project.properties["test_env"] == "uat") {
             options.suites('src/test/resources/testng_uat.xml')
         } else {
             options.suites('src/test/resources/testng_qa.xml')

@@ -184,8 +184,8 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
     public void checkPriceRange() {
-        Assert.assertEquals(LOWER_PRICE_LIMIT <= getMinimumPrice() &&
-            UPPER_PRICE_LIMIT >= getMaximumPrice(), true);
+        Assert.assertTrue(LOWER_PRICE_LIMIT <= getMinimumPrice() &&
+            UPPER_PRICE_LIMIT >= getMaximumPrice());
     }
 
 }
