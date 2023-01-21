@@ -7,7 +7,7 @@
         <classes>
             <class name="TestNG_SimpleTest">
                 <methods>
-                    <include name="doSomething"/>
+                    <include name="testClassAModels"/>
                 </methods>
             </class>
         </classes>
@@ -18,7 +18,7 @@
         <classes>
             <class name="TestNG_SimpleTest">
                 <methods>
-                    <include name="doSomething"/>
+                    <include name="testClassAModels"/>
                 </methods>
             </class>
         </classes>
@@ -29,7 +29,7 @@
         <classes>
             <class name="TestNG_SimpleTest">
                 <methods>
-                    <include name="doSomething"/>
+                    <include name="testClassAModels"/>
                 </methods>
             </class>
         </classes>

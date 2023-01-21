@@ -5,6 +5,7 @@ import static TestSetupTeardown.HelperMethods.parseStringToInt;
 import static TestSetupTeardown.HelperMethods.sleep;
 import static TestSetupTeardown.HelperMethods.writeToFile;
 
+import TestSetupTeardown.HelperMethods;
 import TestSetupTeardown.SetupsAndCleanups;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -43,17 +44,20 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         js.executeScript("return document.getElementsByTagName('cmm-cookie-banner')[0].remove();");
     }
 
+    private SearchContext getShadowRoot(String tagName) {
+        WebElement shadowHost = getDriver().findElement(By.tagName(tagName));
+        return shadowHost.getShadowRoot();
+    }
+
     public void acceptAllCookies() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("cmm-cookie-banner"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("cmm-cookie-banner");
         shadowRoot.findElement(By.cssSelector("div > div > div.cmm-cookie-banner__content > " +
             "cmm-buttons-wrapper > div > div > button.wb-button.wb-button--primary.wb-button--small" +
             ".wb-button--accept-all")).click();
     }
 
     public void clickOnOurCars() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("owc-header"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("owc-header");
         shadowRoot.findElement(By.cssSelector("nav.owc-header__header-navigation > div > ul > li" +
             ".owc-header-navigation-topic" +
             ".owc-header-navigation-topic--desktop-nav.owc-header-navigation-topic__model-flyout > button > p"))
@@ -62,16 +66,14 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
     public void clickOnCarModel() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("vmos-flyout"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("vmos-flyout");
         //4th Elements is Hatchback
         shadowRoot.findElement(By.cssSelector("#app-vue > div > ul > li:nth-child(3) > ul > li:nth-child(4) > div > p"))
             .click();
     }
 
-    public void clickOnHatchbacks() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("vmos-flyout"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+    public void clickOnCarClass() {
+        SearchContext shadowRoot = getShadowRoot("vmos-flyout");
         //Class A -> index 1
         shadowRoot.findElement(By.cssSelector("#app-vue > div > owc-header-flyout > ul > li > ul > li:nth-child(1) > " +
                 "a > p"))
@@ -79,8 +81,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
     public void clickOnBuildYourCar() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("owc-stage"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("owc-stage");
         shadowRoot.findElement(By.cssSelector("a.owc-stage-cta-buttons__button.wb-button" +
                 ".wb-button--medium.wb-button--theme-dark.wb-button--large.wb-button--secondary" +
                 ".owc-stage-cta-buttons__button--secondary"))
@@ -104,8 +105,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
     public void selectFuelType() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
         WebElement filterMain = shadowRoot.findElement(
             By.cssSelector("cc-motorization-filters > cc-motorization-filters-form > form > div" +
                 " > div.cc-motorization-filters-form__primary > div.cc-motorization-filters-form__primary-filters" +
@@ -113,7 +113,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
                 "wb-multi-select-control"));
         WebElement filterButton = filterMain.findElement(By.tagName("button"));
         scrollUntilClickable(filterButton);
-        WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(2) >" +
+        WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(1) >" +
             " label > div > wb-icon"));
         scrollUntilClickable(filterType);
         checkFuelsSelectedCount(filterButton);
@@ -121,8 +121,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
     public List<Integer> getAllPrices() {
-        WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
-        SearchContext shadowRoot = shadowHost.getShadowRoot();
+        SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
         WebElement allCarsContainer = shadowRoot.findElement(
             By.cssSelector("cc-motorization-comparison > div > div"));
         List<WebElement> allCars = allCarsContainer.findElements(By.xpath("*"));
@@ -139,26 +138,26 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     }
 
    public void selectSort(String sort) {
-       WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
-       SearchContext shadowRoot = shadowHost.getShadowRoot();
+       SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
        Select dropdown = new Select(shadowRoot.findElement(By.cssSelector("#motorization-filters-sorting-options")));
        dropdown.selectByIndex(PRICE_SORT_TEXT.get(sort));
    }
 
    public void getSortedPrices() {
-       WebElement shadowHost = getDriver().findElement(By.tagName("owcc-car-configurator"));
-       SearchContext shadowRoot = shadowHost.getShadowRoot();
+       SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
        selectSort("descendantPrice");
        WebElement firstPrice = shadowRoot.findElement(
            By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
        String firstPriceText = firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
        this.uiPriceLimits.put("MAXIMUM_PRICE", parseStringToInt(firstPriceText));
+       HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
        selectSort("ascendantPrice");
        firstPrice = shadowRoot.findElement(
            By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
        firstPriceText =
            firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
+       HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
        Reporter.log(this.uiPriceLimits.toString());
    }
 
