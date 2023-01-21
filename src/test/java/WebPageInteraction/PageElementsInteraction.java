@@ -1,18 +1,21 @@
 package WebPageInteraction;
 
+import static TestSetupTeardown.HelperMethods.getTimestampString;
 import static TestSetupTeardown.HelperMethods.parseStringToInt;
-import static TestSetupTeardown.SetupsAndCleanups.IMPLICIT_WAIT;
+import static TestSetupTeardown.HelperMethods.sleep;
+import static TestSetupTeardown.HelperMethods.writeToFile;
 
+import TestSetupTeardown.SetupsAndCleanups;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.Reporter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,10 +24,8 @@ import java.util.Map;
 
 
 @Slf4j
-public class PageElementsInteraction extends HTMLElementsMapping {
+public class PageElementsInteraction extends SetupsAndCleanups {
 
-    private static final long SAVE_DURATION_MILISECONDS = 5000;
-    private static final String BROWSER_TEST_DATA = "/home/seluser/test_repo/testData/";
     private static final Map<String, Integer> PRICE_SORT_TEXT = new HashMap<>(){{
         put("ascendantPrice", 4);
         put("descendantPrice", 5);
@@ -37,28 +38,6 @@ public class PageElementsInteraction extends HTMLElementsMapping {
         put("MINIMUM_PRICE", -1);
     }};
 
-    private WebDriver webdriver;
-
-    public PageElementsInteraction(WebDriver webdriver) {
-        this.webdriver = webdriver;
-    }
-
-    private WebDriver getDriver() {
-        return this.webdriver;
-    }
-
-    public void waitUntilTextIsDisplayed(String textToSearch) {
-        boolean isSaveConcluded = false;
-        long initialTime = System.currentTimeMillis();
-        long elapsedTime = 0;
-        while (!isSaveConcluded && elapsedTime <= SAVE_DURATION_MILISECONDS) {
-            if (getDriver().getPageSource().contains(textToSearch)) {
-                isSaveConcluded = true;
-            }
-            elapsedTime = System.currentTimeMillis() - initialTime;
-        }
-    }
-
     public void removeCookieBanner() {
         JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("return document.getElementsByTagName('cmm-cookie-banner')[0].remove();");
@@ -70,8 +49,6 @@ public class PageElementsInteraction extends HTMLElementsMapping {
         shadowRoot.findElement(By.cssSelector("div > div > div.cmm-cookie-banner__content > " +
             "cmm-buttons-wrapper > div > div > button.wb-button.wb-button--primary.wb-button--small" +
             ".wb-button--accept-all")).click();
-        //"header > div > nav.owc-header__header-navigation > div > ul > li.owc-header-navigation-topic" +
-        //    ".owc-header-navigation-topic--desktop-nav.owc-header-navigation-topic__model-flyout > button > p"
     }
 
     public void clickOnOurCars() {
@@ -110,15 +87,6 @@ public class PageElementsInteraction extends HTMLElementsMapping {
             .click();
     }
 
-//    private void scrollIntoView(WebElement element) {
-//        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
-//        try {
-//            Thread.sleep(2000);
-//        } catch(InterruptedException ex) {
-//
-//        }
-//    }
-
     private void scrollUntilClickable(WebElement element) {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         executor.executeScript("arguments[0].scrollIntoView(true);", element);
@@ -126,6 +94,7 @@ public class PageElementsInteraction extends HTMLElementsMapping {
     }
 
     public void checkFuelsSelectedCount(WebElement fuelButton) {
+        sleep();
         long initTime = System.currentTimeMillis();
         boolean isTextUpdate = fuelButton.findElement(By.tagName("wb-counter")).getText().isBlank();
         while (isTextUpdate || IMPLICIT_WAIT >= System.currentTimeMillis() - initTime) {
@@ -147,7 +116,7 @@ public class PageElementsInteraction extends HTMLElementsMapping {
         WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(2) >" +
             " label > div > wb-icon"));
         scrollUntilClickable(filterType);
-        //checkFuelsSelectedCount(filterButton);
+        checkFuelsSelectedCount(filterButton);
         filterButton.click();
     }
 
@@ -191,6 +160,12 @@ public class PageElementsInteraction extends HTMLElementsMapping {
            firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
        Reporter.log(this.uiPriceLimits.toString());
+   }
+
+   public void writePricesToFile() throws IOException {
+       String stringToWrite = getMaximumPrice() + "\n" + getMinimumPrice();
+       writeToFile(this.getBrowserScreenshotsPath() +
+           "testResult_" + getTimestampString() + ".txt", stringToWrite);
    }
 
    public int getMaximumPrice() {

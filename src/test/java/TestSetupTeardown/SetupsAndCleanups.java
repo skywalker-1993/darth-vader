@@ -3,7 +3,6 @@ package TestSetupTeardown;
 import static TestSetupTeardown.HelperMethods.getSeleniumHubLink;
 
 import Browser.BrowserSelection;
-import WebPageInteraction.PageElementsInteraction;
 import lombok.Data;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -31,7 +30,7 @@ public class SetupsAndCleanups {
     //private final Map<String, String> seleniumHubLink = new HashMap<String, String>();
     protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
     protected BrowserSelection browserSelection = new BrowserSelection();
-    protected PageElementsInteraction testWebPage;
+    //protected PageElementsInteraction testWebPage;
 
     public SetupsAndCleanups(){
         setTestURLsTable();
@@ -51,9 +50,9 @@ public class SetupsAndCleanups {
         return testURLsTable.get(testConfigURL);
     }
 
-    private void setPageElementsInteraction(WebDriver webdriver) {
-        this.testWebPage = new PageElementsInteraction(webdriver);
-    }
+//    private void setPageElementsInteraction(WebDriver webdriver) {
+//        this.testWebPage = new PageElementsInteraction(webdriver);
+//    }
 
     private void setBrowserDownloadsPath(String browser){
         this.browserDownloadsPath = "/home/test_repo/browser_storage/" + browser + "/Downloads/";
@@ -96,7 +95,6 @@ public class SetupsAndCleanups {
     @BeforeTest
     public void initializeBrowserInstance(String browser) throws MalformedURLException {
         setDriver(browser);
-        setPageElementsInteraction(getDriver());
         setBrowserDownloadsPath(browser);
         setBrowserScreenshotsPath(browser);
         this.webdriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT));

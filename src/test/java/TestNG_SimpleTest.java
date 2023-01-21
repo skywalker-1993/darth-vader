@@ -1,29 +1,28 @@
 import TestSetupTeardown.HelperMethods;
-import TestSetupTeardown.SetupsAndCleanups;
+import WebPageInteraction.PageElementsInteraction;
 import org.openqa.selenium.WebDriver;
-import org.testng.Reporter;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 
-public class TestNG_SimpleTest extends SetupsAndCleanups {
-    ///html/body/cmm-cookie-banner//div/div/div[2]/cmm-buttons-wrapper/div/div/button[2]
+
+public class TestNG_SimpleTest extends PageElementsInteraction {
+
     @Parameters( {"browser", "testURL"})
     @Test
-    public void doSomething(String browser, String testURL) {
+    public void doSomething(String browser, String testURL) throws IOException {
         WebDriver webdriver = getDriver();
         goToSpecifiedWebpage(getTestURL(testURL));
-        testWebPage.acceptAllCookies();
-        testWebPage.clickOnOurCars();
-        testWebPage.clickOnCarModel();
-        testWebPage.clickOnHatchbacks();
-        testWebPage.clickOnBuildYourCar();
-        testWebPage.selectFuelType();
-        testWebPage.getAllPrices();
-        Reporter.log(String.valueOf(testWebPage.getMaximumPrice()));
-        Reporter.log(String.valueOf(testWebPage.getMinimumPrice()));
-        //testWebPage.selectSort("descendantPrice");
-        testWebPage.getSortedPrices();
+        acceptAllCookies();
+        clickOnOurCars();
+        clickOnCarModel();
+        clickOnHatchbacks();
+        clickOnBuildYourCar();
+        selectFuelType();
+        getAllPrices();
+        getSortedPrices();
+        writePricesToFile();
         HelperMethods.takeScreenshot(webdriver, getBrowserScreenshotsPath());
         //TODO: Check how many filters are set
     }

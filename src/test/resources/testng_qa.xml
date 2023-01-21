@@ -18,9 +18,7 @@
         <classes>
             <class name="TestNG_SimpleTest">
                 <methods>
-                    <include name="checkThatDarkModeIsEnabled"/>
-                    <include name="fillChecklistAndExportIt"/>
-                    <include name="importExistingChecklist"/>
+                    <include name="doSomething"/>
                 </methods>
             </class>
         </classes>
@@ -31,9 +29,7 @@
         <classes>
             <class name="TestNG_SimpleTest">
                 <methods>
-                    <include name="checkThatDarkModeIsEnabled"/>
-                    <include name="fillChecklistAndExportIt"/>
-                    <include name="importExistingChecklist"/>
+                    <include name="doSomething"/>
                 </methods>
             </class>
         </classes>

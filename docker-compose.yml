@@ -37,23 +37,8 @@ services:
     depends_on:
       - selenium-hub
 
-  firefox:
-    image: selenium/node-firefox
-    shm_size: 2gb
-    environment:
-      - SCREEN_WIDTH=1920
-      - SCREEN_HEIGHT=1080
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-    # volumes:
-      # - test_repo:/home/seluser/test_repo
-      # - firefox_storage:/home/seluser
-    depends_on:
-      - selenium-hub
-
-#  edge:
-#    image: selenium/node-edge
+#  firefox:
+#    image: selenium/node-firefox
 #    shm_size: 2gb
 #    environment:
 #      - SCREEN_WIDTH=1920
@@ -61,11 +46,26 @@ services:
 #      - SE_EVENT_BUS_HOST=selenium-hub
 #      - SE_EVENT_BUS_PUBLISH_PORT=4442
 #      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#    # volumes:
+#      # - test_repo:/home/seluser/test_repo
+#      # - firefox_storage:/home/seluser
+#    depends_on:
+#      - selenium-hub
+
+  edge:
+    image: selenium/node-edge
+    shm_size: 2gb
+    environment:
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 #    volumes:
 #      - test_repo:/home/seluser/test_repo
 #      - edge_storage:/home/seluser
-#    depends_on:
-#      - selenium-hub
+    depends_on:
+      - selenium-hub
 
   selenium-hub:
     image: selenium/hub

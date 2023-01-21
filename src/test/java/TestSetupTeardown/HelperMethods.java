@@ -8,8 +8,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.sql.Timestamp;
@@ -19,6 +21,7 @@ import java.sql.Timestamp;
 public class HelperMethods extends SetupsAndCleanups{
 
     private static final int WAIT_FOR_FILE = 30;
+    private static final int SLEEP_TIME = 500;
 
     public static void waitForFileToExist(File fullFilePath) throws FileNotFoundException {
         int timer = 0;
@@ -69,13 +72,15 @@ public class HelperMethods extends SetupsAndCleanups{
 
     public static void sleep() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(SLEEP_TIME);
         } catch (InterruptedException ex) {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(getSeleniumHubLink());
+    public static void writeToFile(String fileName, String write) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        writer.write(write);
+        writer.close();
     }
 
 }

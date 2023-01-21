@@ -66,6 +66,7 @@ public class BrowserSelection {
   }
 
   private void setFirefoxOptions() {
+    //TODO: This solution has proven to work in the past. I would have to investigate on why it isn't working anymore
     this.firefoxOptions = new FirefoxOptions();
     setBrowserOptions("firefox");
     FirefoxProfile fxProfile = new FirefoxProfile();
