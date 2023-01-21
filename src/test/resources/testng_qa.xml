@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Demo_Test" parallel="tests" verbose="10">
+<suite name="Demo_Test" parallel="false" verbose="10">
     <test name="Chrome_Test" preserve-order="true" parallel="false" enabled="true">
         <parameter name="browser" value="chrome"/>
         <parameter name="testURL" value="WEBPAGE_QA_URL"/>
@@ -23,7 +23,7 @@
             </class>
         </classes>
     </test>
-    <test name="Edge_Test" preserve-order="true" parallel="false" enabled="false">
+    <test name="Edge_Test" preserve-order="true" parallel="false" enabled="true">
         <parameter name="browser" value="edge"/>
         <parameter name="testURL" value="WEBPAGE_QA_URL"/>
         <classes>

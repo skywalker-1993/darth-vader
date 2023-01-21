@@ -27,6 +27,9 @@ import java.util.Map;
 @Slf4j
 public class PageElementsInteraction extends SetupsAndCleanups {
 
+    private static final int UPPER_PRICE_LIMIT = 60000;
+    private static final int LOWER_PRICE_LIMIT = 15000;
+
     private static final Map<String, Integer> PRICE_SORT_TEXT = new HashMap<>(){{
         put("ascendantPrice", 4);
         put("descendantPrice", 5);
@@ -88,7 +91,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
             .click();
     }
 
-    private void scrollUntilClickable(WebElement element) {
+    private void scrollToAndClick(WebElement element) {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         executor.executeScript("arguments[0].scrollIntoView(true);", element);
         executor.executeScript("arguments[0].click();", element);
@@ -112,10 +115,10 @@ public class PageElementsInteraction extends SetupsAndCleanups {
                 ".ng-star-inserted > cc-motorization-filters-primary-filters > div > fieldset > " +
                 "wb-multi-select-control"));
         WebElement filterButton = filterMain.findElement(By.tagName("button"));
-        scrollUntilClickable(filterButton);
+        scrollToAndClick(filterButton);
         WebElement filterType = filterMain.findElement(By.cssSelector("div > div > wb-checkbox-control:nth-child(1) >" +
             " label > div > wb-icon"));
-        scrollUntilClickable(filterType);
+        scrollToAndClick(filterType);
         checkFuelsSelectedCount(filterButton);
         filterButton.click();
     }
@@ -131,22 +134,17 @@ public class PageElementsInteraction extends SetupsAndCleanups {
             this.priceList.add(parseStringToInt(price));
         }
         Reporter.log(this.priceList.toString());
-        //TODO: Assert message with total amount
-
-        String engineVariants = shadowRoot.findElement(By.cssSelector("cc-motorization-filters > div")).getText();
-        Reporter.log("TIAGO AS ENGINES VARIANTS SAO ESTAS: " + engineVariants);
-
-        //Assert.assertEquals(this.priceList.size(), 2);
+        getEngineVariantsAmount(shadowRoot);
         return this.priceList;
     }
 
-   public void selectSort(String sort) {
+    public void selectSort(String sort) {
        SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
        Select dropdown = new Select(shadowRoot.findElement(By.cssSelector("#motorization-filters-sorting-options")));
        dropdown.selectByIndex(PRICE_SORT_TEXT.get(sort));
-   }
+    }
 
-   public void getSortedPrices() {
+    public void getSortedPrices() {
        SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
        selectSort("descendantPrice");
        WebElement firstPrice = shadowRoot.findElement(
@@ -162,17 +160,17 @@ public class PageElementsInteraction extends SetupsAndCleanups {
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
        HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
        Reporter.log(this.uiPriceLimits.toString());
-   }
+    }
 
-   public void writePricesToFile() throws IOException {
+    public void writePricesToFile() throws IOException {
        String stringToWrite = getMaximumPrice() + "\n" + getMinimumPrice();
        writeToFile(this.getBrowserScreenshotsPath() +
            "testResult_" + getTimestampString() + ".txt", stringToWrite);
-   }
+    }
 
-   public int getMaximumPrice() {
+    public int getMaximumPrice() {
         return Collections.max(this.priceList);
-   }
+    }
 
     public int getMinimumPrice() {
         return Collections.min(this.priceList);
@@ -181,6 +179,16 @@ public class PageElementsInteraction extends SetupsAndCleanups {
     public void checkThatPricesMatchWithOrder() {
         Assert.assertEquals(this.uiPriceLimits.get("MINIMUM_PRICE") + " "
             + this.uiPriceLimits.get("MAXIMUM_PRICE"), getMinimumPrice() + " " + getMaximumPrice());
+    }
+
+    public void getEngineVariantsAmount(SearchContext shadowRoot) {
+        String engineVariants = shadowRoot.findElement(By.cssSelector("cc-motorization-filters > div")).getText();
+        Assert.assertEquals(this.priceList.size(), Integer.parseInt(engineVariants.split(" ")[0]));
+    }
+
+    public void checkPriceRange() {
+        Assert.assertEquals(LOWER_PRICE_LIMIT <= getMinimumPrice() &&
+            UPPER_PRICE_LIMIT >= getMaximumPrice(), true);
     }
 
 }

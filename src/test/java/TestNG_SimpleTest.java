@@ -21,6 +21,7 @@ public class TestNG_SimpleTest extends PageElementsInteraction {
         getSortedPrices();
         writePricesToFile();
         checkThatPricesMatchWithOrder();
+        checkPriceRange();
     }
 
 }
