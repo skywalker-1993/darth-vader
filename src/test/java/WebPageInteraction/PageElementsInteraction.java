@@ -175,7 +175,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
 
     public void getEngineVariantsAmount(SearchContext shadowRoot) {
         String engineVariants = shadowRoot.findElement(By.cssSelector("cc-motorization-filters > div")).getText();
-        Assert.assertEquals(this.priceList.size(), Integer.parseInt(engineVariants.split(" ")[0]));
+        Assert.assertEquals(Integer.parseInt(engineVariants.split(" ")[0]), this.priceList.size());
     }
 
     public void checkPriceRange() {
