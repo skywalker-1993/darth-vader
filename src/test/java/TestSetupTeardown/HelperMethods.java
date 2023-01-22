@@ -14,6 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 
 @Slf4j
@@ -67,5 +69,9 @@ public class HelperMethods extends SetupsAndCleanups{
         writer.close();
     }
 
-}
+    public static String getPriceUK(int priceInt) {
+        String ukPrice = DecimalFormat.getCurrencyInstance(Locale.UK).format(priceInt);
+        return ukPrice.substring(0, ukPrice.length() - 3);
+    }
 
+}

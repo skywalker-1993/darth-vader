@@ -19,6 +19,7 @@ public class TestNG_SimpleTest extends PageElementsInteraction {
         selectFuelType("Diesel");
         getAllPrices();
         getSortedPrices();
+        getResultsScreenshot();
         writePricesToFile();
         checkThatPricesMatchWithOrder();
         checkPriceRange();

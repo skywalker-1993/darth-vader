@@ -1,5 +1,6 @@
 package WebPageInteraction;
 
+import static TestSetupTeardown.HelperMethods.getPriceUK;
 import static TestSetupTeardown.HelperMethods.getTimestampString;
 import static TestSetupTeardown.HelperMethods.parseStringToInt;
 import static TestSetupTeardown.HelperMethods.sleep;
@@ -136,26 +137,33 @@ public class PageElementsInteraction extends SetupsAndCleanups {
        dropdown.selectByIndex(PRICE_SORT_TEXT.get(sort));
     }
 
+    public String getFirstPrice() {
+        SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
+        WebElement firstPrice = shadowRoot.findElement(
+            By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
+        return firstPrice.findElement(By.className("cc-motorization-header__price--with" +
+            "-environmental-hint")).getText();
+    }
+
     public void getSortedPrices() {
-       SearchContext shadowRoot = getShadowRoot("owcc-car-configurator");
        selectSort("descendantPrice");
-       WebElement firstPrice = shadowRoot.findElement(
-           By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
-       String firstPriceText = firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
+       String firstPriceText = getFirstPrice();
        this.uiPriceLimits.put("MAXIMUM_PRICE", parseStringToInt(firstPriceText));
-       HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
        selectSort("ascendantPrice");
-       firstPrice = shadowRoot.findElement(
-           By.cssSelector("cc-motorization-comparison > div > div > div:nth-child(1)"));
-       firstPriceText =
-           firstPrice.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
+       firstPriceText = getFirstPrice();
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
-       HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
        Reporter.log(this.uiPriceLimits.toString());
     }
 
+    public void getResultsScreenshot() {
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        executor.executeScript("scrollTo(0, document.body.scrollHeight/3);");
+        sleep();
+        HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
+    }
+
     public void writePricesToFile() throws IOException {
-       String stringToWrite = getMaximumPrice() + "\n" + getMinimumPrice();
+       String stringToWrite = getPriceUK(getMaximumPrice()) + "\n" + getPriceUK(getMinimumPrice());
        writeToFile(this.getBrowserScreenshotsPath() +
            "testResult_" + getTimestampString() + ".txt", stringToWrite);
     }
