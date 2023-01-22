@@ -35,8 +35,7 @@ public class SetupsAndCleanups {
 
     private void setBrowserScreenshotsPath(String browser) {
         if (null == System.getenv("SELENIUM_HUB_LINK")) {
-            //System.getProperty("user.dir")
-            this.browserScreenshotsPath = "C:\\BrowserScreenshots\\" + browser + "\\";
+            this.browserScreenshotsPath = System.getProperty("user.home") + "/browser_storage/" + browser + "/";
         } else {
             this.browserScreenshotsPath = "/home/test_repo/browser_storage/" + browser + "/";
         }

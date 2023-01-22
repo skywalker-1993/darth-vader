@@ -63,7 +63,6 @@ public class PageElementsInteraction extends SetupsAndCleanups {
 
     public void clickOnCarType(String type) {
         SearchContext shadowRoot = getShadowRoot("vmos-flyout");
-        //4th Elements is Hatchback
         shadowRoot.findElement(By.cssSelector("#app-vue > div > ul > li:nth-child(3) > ul > li:nth-child(" +
                 CAR_TYPES.get(type) + ") > div > p"))
             .click();
