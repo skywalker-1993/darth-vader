@@ -42,6 +42,11 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         put("MINIMUM_PRICE", -1);
     }};
 
+    private final Map<String, String> uiPricesText = new HashMap<>(){{
+        put("MAXIMUM_PRICE", "");
+        put("MINIMUM_PRICE", "");
+    }};
+
     private SearchContext getShadowRoot(String tagName) {
         WebElement shadowHost = getDriver().findElement(By.tagName(tagName));
         return shadowHost.getShadowRoot();
@@ -149,9 +154,11 @@ public class PageElementsInteraction extends SetupsAndCleanups {
        selectSort("descendantPrice");
        String firstPriceText = getFirstPrice();
        this.uiPriceLimits.put("MAXIMUM_PRICE", parseStringToInt(firstPriceText));
+       this.uiPricesText.put("MAXIMUM_PRICE", firstPriceText);
        selectSort("ascendantPrice");
        firstPriceText = getFirstPrice();
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
+       this.uiPricesText.put("MINIMUM_PRICE", firstPriceText);
        Reporter.log(this.uiPriceLimits.toString());
     }
 
@@ -162,10 +169,16 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         HelperMethods.takeScreenshot(getDriver(), getBrowserScreenshotsPath());
     }
 
-    public void writePricesToFile() throws IOException {
+    public void writeActualPricesToFile() throws IOException {
        String stringToWrite = getPriceUK(getMaximumPrice()) + "\n" + getPriceUK(getMinimumPrice());
        writeToFile(this.getBrowserScreenshotsPath() +
            "testResult_" + getTimestampString() + ".txt", stringToWrite);
+    }
+
+    public void writePricesToFile() throws IOException {
+        String stringToWrite = this.uiPricesText.get("MAXIMUM_PRICE") + "\n" + this.uiPricesText.get("MINIMUM_PRICE");
+        writeToFile(this.getBrowserScreenshotsPath() +
+            "testResult_" + getTimestampString() + ".txt", stringToWrite);
     }
 
     public int getMaximumPrice() {

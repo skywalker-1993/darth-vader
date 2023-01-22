@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class TestNG_SimpleTest extends PageElementsInteraction {
 
-    @Parameters( {"browser", "testURL"})
+    @Parameters({"browser", "testURL"})
     @Test
     public void testClassAModels(String browser, String testURL) throws IOException {
         goToSpecifiedWebpage(getTestURL(testURL));
