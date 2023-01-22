@@ -5,6 +5,11 @@ import java.util.Map;
 
 public class ElementMapping {
 
+  protected static final Map<String, Integer> PRICE_SORT_TEXT = new HashMap<>() {{
+    put("ascendantPrice", 4);
+    put("descendantPrice", 5);
+  }};
+
   protected static final Map<String, String> CAR_TYPES = new HashMap<>(){{
     put("Saloons", "1");
     put("SUVs", "2");

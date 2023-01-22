@@ -22,7 +22,6 @@ public class SetupsAndCleanups {
 
     public static final int IMPLICIT_WAIT = 30;
     private static final String REMOTE_URL_HUB = getSeleniumHubLink();
-    public static final String TEST_DATA_PATH = "/home/test_repo/testData/";
     private String browserScreenshotsPath;
     private WebDriver webdriver;
     private final Map<String, String> testURLsTable = new HashMap<String, String>(){{
@@ -30,7 +29,6 @@ public class SetupsAndCleanups {
     }};
     protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
     protected BrowserSelection browserSelection = new BrowserSelection();
-
     public String getTestURL(String testConfigURL){
         return testURLsTable.get(testConfigURL);
     }
@@ -76,4 +74,5 @@ public class SetupsAndCleanups {
     public void closeBrowserInstance() {
         if (null != this.webdriver) this.webdriver.quit();
     }
+
 }

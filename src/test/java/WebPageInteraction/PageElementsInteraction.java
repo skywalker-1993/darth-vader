@@ -7,6 +7,7 @@ import static TestSetupTeardown.HelperMethods.writeToFile;
 import static WebPageInteraction.ElementMapping.CAR_TYPES;
 import static WebPageInteraction.ElementMapping.FUEL_TYPES;
 import static WebPageInteraction.ElementMapping.HATCHBACKS_MODELS;
+import static WebPageInteraction.ElementMapping.PRICE_SORT_TEXT;
 
 import TestSetupTeardown.HelperMethods;
 import TestSetupTeardown.SetupsAndCleanups;
@@ -32,11 +33,6 @@ public class PageElementsInteraction extends SetupsAndCleanups {
 
     private static final int UPPER_PRICE_LIMIT = 60000;
     private static final int LOWER_PRICE_LIMIT = 15000;
-
-    private static final Map<String, Integer> PRICE_SORT_TEXT = new HashMap<>(){{
-        put("ascendantPrice", 4);
-        put("descendantPrice", 5);
-    }};
 
     private final List<Integer> priceList = new ArrayList<>();
 
