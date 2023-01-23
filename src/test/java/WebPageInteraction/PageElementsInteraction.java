@@ -97,11 +97,6 @@ public class PageElementsInteraction extends SetupsAndCleanups {
 
     public void checkFuelsSelectedCount(WebElement fuelButton) {
         sleep();
-        long initTime = System.currentTimeMillis();
-        boolean isTextUpdate = fuelButton.findElement(By.tagName("wb-counter")).getText().isBlank();
-        while (isTextUpdate || IMPLICIT_WAIT >= System.currentTimeMillis() - initTime) {
-            isTextUpdate = fuelButton.findElement(By.tagName("wb-counter")).getText().isBlank();
-        }
         Assert.assertEquals(fuelButton.findElement(By.tagName("wb-counter")).getText(), "1");
     }
 
@@ -126,12 +121,11 @@ public class PageElementsInteraction extends SetupsAndCleanups {
         WebElement allCarsContainer = shadowRoot.findElement(
             By.cssSelector("cc-motorization-comparison > div > div"));
         List<WebElement> allCars = allCarsContainer.findElements(By.xpath("*"));
-        Reporter.log(String.valueOf(allCars.size()));
         for (WebElement el: allCars) {
             String price = el.findElement(By.className("cc-motorization-header__price--with-environmental-hint")).getText();
             this.priceList.add(parseStringToInt(price));
         }
-        Reporter.log(this.priceList.toString());
+        Reporter.log("[INFO]: All the gathered prices shown in the UI -> " + this.priceList);
         getEngineVariantsAmount(shadowRoot);
         return this.priceList;
     }
@@ -159,7 +153,7 @@ public class PageElementsInteraction extends SetupsAndCleanups {
        firstPriceText = getFirstPrice();
        this.uiPriceLimits.put("MINIMUM_PRICE", parseStringToInt(firstPriceText));
        this.uiPricesText.put("MINIMUM_PRICE", firstPriceText);
-       Reporter.log(this.uiPriceLimits.toString());
+       Reporter.log("[INFO]: UI Highest and Lowest Prices -> " + this.uiPriceLimits);
     }
 
     public void getResultsScreenshot() {
