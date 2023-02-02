@@ -3,7 +3,11 @@ package TestSetupTeardown;
 import static TestSetupTeardown.HelperMethods.getSeleniumHubLink;
 
 import Browser.BrowserSelection;
-import lombok.Data;
+import PassengerCars.FuelSelection;
+import PassengerCars.MainPage;
+import PassengerCars.ModelOverview;
+import PassengerCars.PricesOverview;
+import WebPageInteraction.PageElementsInteraction;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -17,21 +21,13 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 public class SetupsAndCleanups {
+
+    protected String browserScreenshotsPath;
+    protected WebDriver webDriver;
 
     public static final int IMPLICIT_WAIT = 30;
     private static final String REMOTE_URL_HUB = getSeleniumHubLink();
-    private String browserScreenshotsPath;
-    private WebDriver webdriver;
-    private final Map<String, String> testURLsTable = new HashMap<String, String>(){{
-        put("WEBPAGE_QA_URL", "https://www.mercedes-benz.co.uk");
-    }};
-    protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
-    protected BrowserSelection browserSelection = new BrowserSelection();
-    public String getTestURL(String testConfigURL){
-        return testURLsTable.get(testConfigURL);
-    }
 
     private void setBrowserScreenshotsPath(String browser) {
         if (null == System.getenv("SELENIUM_HUB_LINK")) {
@@ -41,37 +37,60 @@ public class SetupsAndCleanups {
         }
     }
 
-    public String getBrowserScreenshotsPath() {
-        return this.browserScreenshotsPath;
+    protected String getBrowserScreenshotsPath() {
+        return browserScreenshotsPath;
     }
 
-    private void setDriver(String browser) throws MalformedURLException {
-        this.webdriver = browserSelection.setRemoteWebDriver(driver, REMOTE_URL_HUB, browser).get();
+    protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
+
+    private void setWebDriver(String browser) throws MalformedURLException {
+        this.webDriver = browserSelection.setRemoteWebDriver(driver, REMOTE_URL_HUB, browser).get();
     }
 
-    public WebDriver getDriver(){
-        return webdriver;
+    protected WebDriver getWebDriver() {
+        return webDriver;
     }
+
+    private final Map<String, String> testURLsTable = new HashMap<>() {{
+        put("WEBPAGE_QA_URL", "https://www.mercedes-benz.co.uk");
+    }};
+
+    public String getTestURL(String testConfigURL) {
+        return testURLsTable.get(testConfigURL);
+    }
+
+    protected BrowserSelection browserSelection = new BrowserSelection();
+    public PageElementsInteraction pageElements = new PageElementsInteraction();
+    public MainPage mainPage = new MainPage();
+    public ModelOverview modelOverview = new ModelOverview();
+    public FuelSelection fuelSelection = new FuelSelection();
+    public PricesOverview pricesOverview = new PricesOverview();
 
     public void goToSpecifiedWebpage(String webpageURL) {
-        this.webdriver.navigate().to(webpageURL);
-        Actions actionObject = new Actions(this.webdriver);
+        this.webDriver.navigate().to(webpageURL);
+        Actions actionObject = new Actions(this.webDriver);
         actionObject.keyDown(Keys.CONTROL).sendKeys(Keys.F5).keyUp(Keys.CONTROL).perform();
-        this.webdriver.navigate().refresh();
-        this.webdriver.manage().window().maximize();
+        this.webDriver.navigate().refresh();
+        this.webDriver.manage().window().maximize();
     }
 
     @Parameters({"browser"})
     @BeforeTest
     public void initializeBrowserInstance(String browser) throws MalformedURLException {
-        setDriver(browser);
+        setWebDriver(browser);
+        pageElements.setDriver(getWebDriver());
+        mainPage.setDriver(getWebDriver());
+        modelOverview.setDriver(getWebDriver());
+        fuelSelection.setDriver(getWebDriver());
+        pricesOverview.setDriver(getWebDriver());
         setBrowserScreenshotsPath(browser);
-        this.webdriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT));
+        pricesOverview.setBrowserScreenshotsPath(getBrowserScreenshotsPath());
+        this.webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT));
     }
 
     @AfterTest
     public void closeBrowserInstance() {
-        if (null != this.webdriver) this.webdriver.quit();
+        if (null != this.webDriver) this.webDriver.quit();
     }
 
 }

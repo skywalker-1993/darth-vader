@@ -19,7 +19,7 @@ import java.util.Locale;
 
 
 @Slf4j
-public class HelperMethods extends SetupsAndCleanups{
+public class HelperMethods {
 
     private static final int SLEEP_TIME = 500;
 
@@ -56,11 +56,8 @@ public class HelperMethods extends SetupsAndCleanups{
         return Integer.parseInt(mod);
     }
 
-    public static void sleep() {
-        try {
-            Thread.sleep(SLEEP_TIME);
-        } catch (InterruptedException ex) {
-        }
+    public static void sleep() throws InterruptedException {
+        Thread.sleep(SLEEP_TIME);
     }
 
     public static void writeToFile(String fileName, String write) throws IOException {

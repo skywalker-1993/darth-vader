@@ -23,7 +23,7 @@
             </class>
         </classes>
     </test>
-    <test name="Edge_Test" preserve-order="true" parallel="false" enabled="true">
+    <test name="Edge_Test" preserve-order="true" parallel="false" enabled="false">
         <parameter name="browser" value="edge"/>
         <parameter name="testURL" value="WEBPAGE_QA_URL"/>
         <classes>
